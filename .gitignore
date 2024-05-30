@@ -21,3 +21,4 @@ _ide_helper_models.php
 /.fleet
 /.idea
 /.vscode
+composer.phar
