@@ -17,6 +17,12 @@ class Post extends Model
         'content',
         'published',
         'category_id',
+        'short_description',
+        'keywords',
+    ];
+
+    protected $casts = [
+        'keywords' => 'array',
     ];
 
     public function category()
@@ -26,7 +32,6 @@ class Post extends Model
 
     public function tags()
     {
-
         return $this->belongsToMany(Tag::class, 'posts_tags')->withTimestamps();
     }
 }

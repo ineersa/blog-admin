@@ -5,16 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
+use Filament\Forms;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
-use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ColorColumn;
@@ -42,10 +43,12 @@ class PostResource extends Resource
             ->schema([
                 Section::make('Content')->schema([
                     TextInput::make('title')
-                        ->minLength(3)
-                        ->maxLength(255)
+                        ->minLength(10)
+                        ->maxLength(120)
                         ->live(onBlur: true)
                         ->afterStateUpdated(function (string $operation, string $state, Forms\Set $set, Forms\Get $get) {
+                            $firstSentence = explode('.', $state);
+                            $set('short_description', $firstSentence[0] ?? '');
                             // operation - create, edit
                             // state - current value
                             if ($operation === 'edit') {
@@ -71,8 +74,23 @@ class PostResource extends Resource
                         ->required(),
                     MarkdownEditor::make('content')
                         ->required()
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, string $state, Forms\Set $set, Forms\Get $get) {
+                            // operation - create, edit
+                            // state - current value
+                            if ($operation === 'edit') {
+                                return;
+                            }
+                            $firstSentence = explode('.', $state);
+                            $set('short_description', $firstSentence[0] ?? '');
+                        })
                         ->fileAttachmentsDisk('shared')
                         ->fileAttachmentsDirectory('attachments')
+                        ->columnSpanFull(),
+                    Forms\Components\Textarea::make('short_description')
+                        ->required()
+                        ->minLength('30')
+                        ->maxLength(255)
                         ->columnSpanFull(),
                 ])->columnSpan(2)
                     ->columns(2),
@@ -91,7 +109,18 @@ class PostResource extends Resource
                             ->relationship('tags', 'name')
                             ->multiple()
                             ->preload()
-                            ->required(),
+                            ->rules([
+                                fn (string $operation): \Closure => function (string $attribute, $value, \Closure $fail) use ($operation) {
+                                    if ($operation === 'edit') {
+                                        if (empty($value)) {
+                                            $fail('Tags are required on edit.');
+                                        }
+                                    }
+                                },
+                            ]),
+                        TagsInput::make('keywords')
+                            ->required()
+                            ->placeholder('Keyword'),
                         Toggle::make('published'),
                     ])->columnSpan(1)
                         ->columns(1),
