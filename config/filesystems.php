@@ -79,7 +79,7 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
-        public_path('shared') => storage_path('../storage/public'),
+        public_path('shared') => storage_path(env('APP_SHARED_STORAGE')),
     ],
 
 ];
