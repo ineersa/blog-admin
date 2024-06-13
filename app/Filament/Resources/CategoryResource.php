@@ -29,7 +29,7 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->minLength(3)
+                    ->minLength(2)
                     ->maxLength(100)
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $operation, string $state, Forms\Set $set, Forms\Get $get, Category $category) {
@@ -43,7 +43,7 @@ class CategoryResource extends Resource
                     })
                     ->required(),
                 TextInput::make('slug')
-                    ->minLength(3)
+                    ->minLength(2)
                     ->maxLength(100)
                     ->unique(ignoreRecord: true)
                     ->regex('/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/')
