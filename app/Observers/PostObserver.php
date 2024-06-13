@@ -55,7 +55,7 @@ class PostObserver
 
     private function checkPublished(Post $post): void
     {
-        if ($post->isDirty('published') && $post->published) {
+        if ($post->getOriginal('published') != $post->getAttribute('published') && $post->getAttribute('published')) {
             $post->published_at = \Carbon\Carbon::now();
         }
     }
