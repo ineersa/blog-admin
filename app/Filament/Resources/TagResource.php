@@ -30,7 +30,7 @@ class TagResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->minLength(3)
+                    ->minLength(2)
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $operation, string $state, Forms\Set $set, Forms\Get $get) {
@@ -47,7 +47,7 @@ class TagResource extends Resource
                     ->readOnlyOn('edit')
                     ->unique(ignoreRecord: true)
                     ->regex('/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/')
-                    ->minLength(3)
+                    ->minLength(2)
                     ->maxLength(255),
             ]);
     }
