@@ -145,6 +145,7 @@ class PostResource extends Resource
                 TextColumn::make('created_at')->label('Created')->date()
                     ->sortable()->searchable()->toggleable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 /*Filter::make('Published Posts')->query(
                     function (Builder $query) {
