@@ -23,3 +23,6 @@ _ide_helper_models.php
 /.idea
 /.vscode
 composer.phar
+public/shared
+storage/public/
+
