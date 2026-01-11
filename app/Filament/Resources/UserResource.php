@@ -34,9 +34,10 @@ class UserResource extends Resource
                     ->required()
                     ->email(),
                 TextInput::make('password')
-                    ->required()
                     ->password()
-                    ->visibleOn('create'),
+                    ->required(fn (string $context): bool => $context === 'create')
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->dehydrateStateUsing(fn ($state) => bcrypt($state)),
             ]);
     }
 
